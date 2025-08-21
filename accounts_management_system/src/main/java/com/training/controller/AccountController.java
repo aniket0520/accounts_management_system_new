@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/accounts")
@@ -39,19 +41,46 @@ public class AccountController {
         return ResponseEntity.ok(accountService.getAccountsByCustomerId(customerId));
     }
 
-    @PutMapping
-    public ResponseEntity<String> updateAccount(@RequestBody Account account) {
+//    @PutMapping
+//    public ResponseEntity<String> updateAccount(@RequestBody Account account) {
+//        boolean updated = accountService.updateAccount(account);
+//        return updated
+//                ? ResponseEntity.ok("Account updated successfully.")
+//                : new ResponseEntity<>("Account not found.", HttpStatus.NOT_FOUND);
+//    }
+    @PutMapping("/{id}")
+    public ResponseEntity<Map<String, String>> updateAccount(@PathVariable Long id, @RequestBody Account account) {
+        account.setAccountId(id);
         boolean updated = accountService.updateAccount(account);
-        return updated
-                ? ResponseEntity.ok("Account updated successfully.")
-                : new ResponseEntity<>("Account not found.", HttpStatus.NOT_FOUND);
+        Map<String, String> response = new HashMap<>();
+        if (updated) {
+            response.put("message", "Account updated successfully.");
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("message", "Account not found.");
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
     }
 
+
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<String> deleteAccount(@PathVariable Long id) {
+//        boolean deleted = accountService.deleteAccount(id);
+//        return deleted
+//                ? ResponseEntity.ok("Account deleted successfully.")
+//                : new ResponseEntity<>("Account not found.", HttpStatus.NOT_FOUND);
+//    }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteAccount(@PathVariable Long id) {
+    public ResponseEntity<Map<String, String>> deleteAccount(@PathVariable Long id) {
         boolean deleted = accountService.deleteAccount(id);
-        return deleted
-                ? ResponseEntity.ok("Account deleted successfully.")
-                : new ResponseEntity<>("Account not found.", HttpStatus.NOT_FOUND);
+        Map<String, String> response = new HashMap<>();
+        if (deleted) {
+            response.put("message", "Account deleted successfully.");
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("message", "Account not found.");
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
     }
 }
