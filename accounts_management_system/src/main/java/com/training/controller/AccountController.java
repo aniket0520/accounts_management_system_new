@@ -4,6 +4,7 @@ import com.training.model.Account;
 import com.training.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -17,12 +18,15 @@ public class AccountController {
     @Autowired
     private AccountService accountService;
 
+    @PreAuthorize("hasRole('TELLER')")
     @PostMapping
     public ResponseEntity<Account> createAccount(@RequestBody Account account) {
         Account created = accountService.createAccount(account);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
+
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN','TELLER')")
     @GetMapping("/{id}")
     public ResponseEntity<Account> getAccount(@PathVariable Long id) {
         Account account = accountService.getAccountById(id);
@@ -31,11 +35,13 @@ public class AccountController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN','TELLER')")
     @GetMapping
     public ResponseEntity<List<Account>> getAllAccounts() {
         return ResponseEntity.ok(accountService.getAllAccounts());
     }
 
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN','CUSTOMER','TELLER')")
     @GetMapping("/customer/{customerId}")
     public ResponseEntity<List<Account>> getAccountsByCustomer(@PathVariable Long customerId) {
         return ResponseEntity.ok(accountService.getAccountsByCustomerId(customerId));
@@ -48,6 +54,7 @@ public class AccountController {
 //                ? ResponseEntity.ok("Account updated successfully.")
 //                : new ResponseEntity<>("Account not found.", HttpStatus.NOT_FOUND);
 //    }
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN','TELLER')")
     @PutMapping("/{id}")
     public ResponseEntity<Map<String, String>> updateAccount(@PathVariable Long id, @RequestBody Account account) {
         account.setAccountId(id);
@@ -71,6 +78,7 @@ public class AccountController {
 //                : new ResponseEntity<>("Account not found.", HttpStatus.NOT_FOUND);
 //    }
 
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN','TELLER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, String>> deleteAccount(@PathVariable Long id) {
         boolean deleted = accountService.deleteAccount(id);
