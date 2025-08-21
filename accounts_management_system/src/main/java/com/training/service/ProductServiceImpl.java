@@ -33,7 +33,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product getProduct(String productName) {
-        String url = PRODUCT_API_URL + productName;
         List<ProductMasterResponse> products = productsWebClient.get()
                 .uri("search/name/" + productName)
                 .retrieve()

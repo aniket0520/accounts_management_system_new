@@ -35,4 +35,26 @@ public class WebClientConfig {
                 })
                 .build();
     }
+
+    @Bean
+    public WebClient customersWebClient(WebClient.Builder builder) {
+        return builder
+                .baseUrl("http://localhost:5050/customers/")
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                // Relay incoming Bearer token to downstream call
+                .filter((request, next) -> {
+                    String token = Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
+                            .filter(JwtAuthenticationToken.class::isInstance)
+                            .map(JwtAuthenticationToken.class::cast)
+                            .map(t -> t.getToken().getTokenValue())
+                            .orElse(null);
+
+                    ClientRequest withAuth = ClientRequest.from(request)
+                            .headers(h -> { if (token != null) h.setBearerAuth(token); })
+                            .build();
+
+                    return next.exchange(withAuth);
+                })
+                .build();
+    }
 }
