@@ -43,7 +43,7 @@ public class AccountController {
 
     @PreAuthorize("hasAnyRole('SUPER_ADMIN','CUSTOMER','TELLER')")
     @GetMapping("/customer/{customerId}")
-    public ResponseEntity<List<Account>> getAccountsByCustomer(@PathVariable Long customerId) {
+    public ResponseEntity<List<Account>> getAccountsByCustomer(@PathVariable String customerId) {
         return ResponseEntity.ok(accountService.getAccountsByCustomerId(customerId));
     }
 

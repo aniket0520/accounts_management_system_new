@@ -30,9 +30,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account createAccount(Account account) {
-        //CutomerId validation based on docnumber
-
-        Long customerId = kycDocumentService.getCustomerIdByDocNumber(account.getDocumentNumber());
+        String customerId = kycDocumentService.getCustomerIdByDocNumber(account.getDocumentNumber());
         if (customerId == null) {
             throw new IllegalStateException(
                     "CustomerId not present  " + account.getDocumentNumber()
@@ -73,7 +71,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public List<Account> getAccountsByCustomerId(Long customerId) {
+    public List<Account> getAccountsByCustomerId(String customerId) {
         return accountDAO.findByCustomerId(customerId);
     }
 
