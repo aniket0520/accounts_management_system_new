@@ -19,7 +19,7 @@ public class Account {
 
     private String accountType;
     private String status;
-    private Long customerId;
+    private String customerId;
 
 
     @OneToOne(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -36,7 +36,7 @@ public class Account {
     public Account() {
     }
 
-    public Account(Long accountId, String accountNumber, String accountType, String status, Long customerId, AccountBalance accountBalance, Double openingBalance, String documentNumber) {
+    public Account(Long accountId, String accountNumber, String accountType, String status, String customerId, AccountBalance accountBalance, Double openingBalance, String documentNumber) {
         this.accountId = accountId;
         this.accountNumber = accountNumber;
         this.accountType = accountType;
@@ -79,11 +79,11 @@ public class Account {
         this.status = status;
     }
 
-    public Long getCustomerId() {
+    public String getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(Long customerId) {
+    public void setCustomerId(String customerId) {
         this.customerId = customerId;
     }
 

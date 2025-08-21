@@ -7,7 +7,7 @@ import java.util.List;
 public interface AccountService {
     Account createAccount(Account account);
     Account getAccountById(Long id);
-    List<Account> getAccountsByCustomerId(Long customerId);
+    List<Account> getAccountsByCustomerId(String customerId);
     List<Account> getAllAccounts();
     boolean updateAccount(Account account);
     boolean deleteAccount(Long id);
